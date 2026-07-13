@@ -1,0 +1,17 @@
+name = "morning-digest-mega-feed"
+version = "1.1.0"
+description = "RSS news aggregator with AI prompt generation (CustomTkinter)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [".venv", "venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]

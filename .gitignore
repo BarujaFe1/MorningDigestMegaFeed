@@ -136,6 +136,8 @@ celerybeat.pid
 
 # Environments
 .env
+.env.*
+!.env.example
 .envrc
 .venv
 env/
@@ -143,6 +145,19 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# App local state / personal exports
+news_config.json
+*.local.json
+exports/
+digest_export*.md
+digest_export*.txt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
 
 # Spyder project settings
 .spyderproject
