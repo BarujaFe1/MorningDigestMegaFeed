@@ -77,7 +77,7 @@ class UltimateNewsApp(ctk.CTk):
         self.title_lbl.pack(anchor="w")
         self.subtitle_lbl = ctk.CTkLabel(
             title_wrap,
-            text="RSS → filtros → prompt pronto para IA",
+            text="RSS → filtros → prompt Markdown (handoff local)",
             font=FONT_SUB,
             text_color=THEME["comment"],
         )

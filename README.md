@@ -2,104 +2,76 @@
   <img src="./icon.png" alt="Morning Digest Logo" width="120" height="120" />
 
   <h1>Morning Digest // MEGA FEED</h1>
-  <p><strong>De dezenas de feeds RSS a um prompt pronto para IA — em um clique.</strong></p>
-  <p><em>From scattered RSS noise to an interview-ready, AI-ready news digest.</em></p>
+  <p><strong>Lab desktop local-first:</strong> RSS → limpeza → filtros → dedupe → prompt Markdown para handoff.</p>
+  <p><em>Predecessor de laboratório do produto web <a href="https://github.com/BarujaFe1/NewsWeave">NewsWeave</a> — não compete como case principal.</em></p>
 
   <p>
+    <img src="https://img.shields.io/badge/Role-Lab%20desktop-64748B.svg" alt="Lab desktop" />
     <img src="https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white" alt="Python 3.10+" />
     <img src="https://img.shields.io/badge/GUI-CustomTkinter-0EA5E9.svg" alt="CustomTkinter" />
     <img src="https://img.shields.io/badge/Tests-pytest-0F172A.svg" alt="pytest" />
-    <img src="https://img.shields.io/badge/Lint-ruff-D7FF64.svg" alt="ruff" />
+    <img src="https://img.shields.io/badge/CI-GitHub%20Actions-2088FF.svg" alt="CI" />
     <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License" />
   </p>
 
   <p>
     <a href="https://github.com/BarujaFe1">GitHub</a> ·
     <a href="https://barujafe.vercel.app/">Portfólio</a> ·
-    <a href="https://www.linkedin.com/in/barujafe/">LinkedIn</a>
+    <a href="https://www.linkedin.com/in/barujafe/">LinkedIn</a> ·
+    <a href="./docs/PORTFOLIO_POSITIONING.md">Posicionamento</a>
   </p>
 </div>
 
 ---
 
-## Screenshot
+## Screenshots (reais, demo fixtures, sem PII)
 
-> **Placeholder:** adicione capturas reais em `docs/screenshots/` e substitua o bloco abaixo.
+| Empty / onboarding | DEMO OFFLINE | Configurações |
+|---|---|---|
+| ![empty](./docs/screenshots/01-collector-empty.png) | ![demo](./docs/screenshots/02-collector-demo.png) | ![settings](./docs/screenshots/03-settings.png) |
+
+Regenerar: `python scripts/capture_screenshots.py` (requer display + Pillow).
+
+---
+
+## Problema e público
+
+**Público:** quem monta briefing matinal a partir de muitas fontes (estudantes, creators, analistas).
+
+**Problema:** informação demais, organização de menos — feeds em abas, duplicatas, ruído temático e prompts montados à mão.
+
+## Solução e fluxo
+
+App **desktop** Python que executa um mini-pipeline:
 
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│  MORNING DIGEST // MEGA FEED          Demo! 9 notícias       │
-│  RSS → filtros → prompt pronto para IA                       │
-├──────────────────────────────────────────────────────────────┤
-│  [ Coletor ]  [ Configurações ]                              │
-│  Template: [ Padrão ▼ ]                   35 feeds ativos    │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ ☀️ BOM DIA!                                            │  │
-│  │ ### 15 DESTAQUES / RADAR RÁPIDO                        │  │
-│  │ (prompt estruturado para ChatGPT / Claude)             │  │
-│  └────────────────────────────────────────────────────────┘  │
-│  [ RASTREAR TUDO ] [ DEMO OFFLINE ] [ EXPORTAR ] [ COPIAR ]  │
-└──────────────────────────────────────────────────────────────┘
+Feeds RSS (ou fixtures DEMO)
+  → fetch sequencial com timeout / isolamento de falha
+  → limpeza HTML
+  → filtros include/exclude
+  → dedupe por título + ordenação por data
+  → template de prompt
+  → clipboard ou export .md
 ```
 
-![App screenshot placeholder](./icon.png)
+**Não** chama APIs de modelo de linguagem. A saída é texto estruturado para colar em uma ferramenta externa.
+
+Amostra gerada pelo mesmo pipeline: [`docs/samples/demo_digest.md`](./docs/samples/demo_digest.md).
 
 ---
 
-## Problema real
+## O que este projeto demonstra
 
-Quem acompanha tech, mercado, esportes, política e notícias locais ao mesmo tempo não sofre com *falta* de informação — sofre com **dispersão**:
-
-- feeds espalhados em abas;
-- manchetes duplicadas entre portais;
-- ruído temático;
-- prompts montados manualmente toda manhã;
-- nenhuma rotina repetível de curadoria.
-
-## Solução
-
-**Morning Digest** é um app desktop que:
-
-1. coleta dezenas de RSS em paralelo (com timeout e isolamento de falhas);
-2. limpa HTML dos resumos;
-3. aplica filtros include/exclude;
-4. remove duplicatas e ordena por data;
-5. aplica um **template de prompt**;
-6. entrega o resultado para **copiar** ou **exportar Markdown** — pronto para colar em uma IA.
-
-Não chama APIs de LLM: o produto é o **pipeline de curadoria + handoff**, o que reduz custo, chave de API e atrito de privacidade.
-
----
-
-## Principais funcionalidades
-
-- **Coleta massiva de RSS** com catálogo padrão (30+ fontes) e feeds customizados
-- **Templates de prompt** (Padrão, Tech/Games, Corinthians & Política, Crypto & Mercado, Estoico)
-- **Filtros por palavra-chave** (incluir / excluir)
-- **Deduplicação** e ordenação temporal
-- **Persistência local** em `news_config.json`
-- **DEMO OFFLINE** para entrevistas e CI mental (sem rede)
-- **Exportar .md** + copiar para clipboard
-- **Restaurar configuração padrão**
-- **Validação de URL** ao adicionar feeds
-
----
+- Pipeline de dados local (ingest → transform → deliver)
+- Separação UI × domínio testável
+- Resiliência: config JSON inválida, falha por feed, empty state
+- DX de demonstração: **DEMO OFFLINE** + screenshots reproduzíveis
+- Honestidade de escopo: lab desktop, não “plataforma de produção”
 
 ## Arquitetura
 
-```text
-UI (CustomTkinter)
-   ↓
-Collector (urllib + feedparser | demo fixtures)
-   ↓
-Clean → Filter → Dedupe/Sort
-   ↓
-Prompt Template Engine
-   ↓
-Clipboard / Markdown export
-```
-
-Detalhes: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
+Pacote `morning_digest/`: `collector`, `filters`, `prompts`, `config`, `app` (CustomTkinter).  
+Detalhes: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
 ### Stack
 
@@ -107,132 +79,102 @@ Detalhes: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)
 |---|---|
 | Linguagem | Python 3.10+ |
 | UI | CustomTkinter |
-| RSS | feedparser + urllib |
+| RSS | urllib + feedparser |
 | Clipboard | pyperclip |
-| Config | JSON local |
+| Config | JSON local (`news_config.json`, gitignored) |
 | Qualidade | pytest, ruff, GitHub Actions |
 
 ---
 
-## Demo local
+## Relação com NewsWeave
+
+| | Morning Digest | NewsWeave |
+|---|---|---|
+| Papel | **Laboratório / legado desktop** | **Selecionado (web)** |
+| Stack | CustomTkinter | FastAPI + Next.js |
+| Entrega | Prompt Markdown local | Briefing / ranking web |
+
+Ver [`docs/PORTFOLIO_POSITIONING.md`](./docs/PORTFOLIO_POSITIONING.md).
+
+---
+
+## Estado real, demo e limitações
+
+| Item | Status |
+|---|---|
+| Instala e roda localmente | Sim (`python main.py`) |
+| Demo sem rede | Sim (**DEMO OFFLINE**) |
+| Testes de domínio + CI | Sim (GUI não sobe no CI) |
+| Deploy web / URL pública | **Não** — app desktop |
+| Binário empacotado | Opcional (docs), não é release automatizado |
+| Coleta paralela | **Não** — sequencial com isolamento |
+
+## Quick start
 
 ```bash
 git clone https://github.com/BarujaFe1/MorningDigestMegaFeed.git
 cd MorningDigestMegaFeed
 python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-# Linux/macOS
-source .venv/bin/activate
-
+# Windows: .venv\Scripts\activate
+# Unix: source .venv/bin/activate
 pip install -r requirements.txt
 python main.py
 ```
 
-No app: clique **DEMO OFFLINE** para gerar um digest sem depender de feeds externos.
+Depois: **DEMO OFFLINE** → revisar digest → **COPIAR PROMPT** ou **EXPORTAR .MD**.
 
-Dev / qualidade:
+## Variáveis de ambiente
+
+Nenhuma chave obrigatória. Ver [`.env.example`](./.env.example).
+
+## Testes / gates
 
 ```bash
 pip install -r requirements-dev.txt
 ruff check .
 pytest -q
+python -m compileall morning_digest main.py
 ```
 
----
+Roteiro de entrevista (3–5 min): [`docs/DEMO_SCRIPT.md`](./docs/DEMO_SCRIPT.md).
 
-## Variáveis de ambiente
+## Decisões e trade-offs
 
-Nenhuma chave é obrigatória. Veja [`.env.example`](./.env.example) para opções futuras documentadas.  
-Estado do usuário: `news_config.json` (gitignored).
+- Desktop local → zero hosting; sem demo URL
+- Sem chamada a LLM → privacidade/custo; handoff manual
+- JSON local → simples; sem sync multi-dispositivo
+- Fixtures demo → entrevista estável; não é notícia ao vivo
 
-Exemplo de config gerada:
+Mais: [`docs/TECHNICAL_DECISIONS.md`](./docs/TECHNICAL_DECISIONS.md).
 
-```json
-{
-  "feeds": ["https://g1.globo.com/rss/g1/"],
-  "prompt_template": "Padrão",
-  "keywords_include": ["python", "IA"],
-  "keywords_exclude": ["BBB"]
-}
-```
+## Roadmap (lab)
 
----
+- Health-check visual por feed
+- Toggle enable/disable por fonte
+- Empacotamento PyInstaller opcional
 
-## Testes
-
-```bash
-pytest -q
-```
-
-Cobertura focada em filtros, limpeza HTML, config resiliente, prompts e coleta demo.  
-Guia: [`docs/TESTING.md`](./docs/TESTING.md)
+Não planejado neste repo: substituir o NewsWeave.
 
 ---
 
-## Decisões técnicas e trade-offs
+## Roteiro de entrevista (resumo)
 
-| Decisão | Trade-off |
-|---|---|
-| Desktop em vez de web | Zero hosting; sem URL pública de demo |
-| Sem chamada a LLM | Privacidade/custo ↑; “resumo mágico” fica no ChatGPT |
-| JSON local | Simples; sem sync multi-dispositivo |
-| Demo fixtures | Demo estável; conteúdo ilustrativo |
-
-Mais em [`docs/TECHNICAL_DECISIONS.md`](./docs/TECHNICAL_DECISIONS.md).
-
----
-
-## Roadmap
-
-- [ ] Health-check visual por feed  
-- [ ] Enable/disable por fonte  
-- [ ] Editor de templates persistente  
-- [ ] Agendamento diário  
-- [ ] Build PyInstaller one-click  
-- [ ] Preview / abrir link no navegador  
-
-## Status atual
-
-**Ativo / portfolio-ready (v1.1).** Pipeline testado, CI configurada, demo offline disponível. Empacotamento binário ainda é opcional (ver [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md)).
-
----
-
-## O que este projeto demonstra
-
-- Modelagem de um **pipeline de dados** (ingest → transform → deliver) em Python  
-- Separação **UI × domínio** com testes unitários  
-- Tratamento de falhas de rede e config corrompida  
-- UX de produto: empty state, loading, demo, export  
-- Documentação e CI pensadas para avaliação técnica  
-- Sensibilidade a **privacidade** (sem API keys; config local gitignored)
-
-## Como eu apresentaria em entrevista
-
-1. **Problema (30s):** “Eu perdia tempo montando briefing matinal a partir de 30 abas.”  
-2. **Solução (30s):** “App local que transforma RSS em prompt estruturado para IA.”  
-3. **Arquitetura (60s):** Desenhar o fluxo collector → filters → prompt; mostrar `morning_digest/`.  
-4. **Demo (60s):** Abrir o app → **DEMO OFFLINE** → copiar prompt.  
-5. **Engenharia (60s):** Thread-safety no Tk, isolamento por feed, testes sem GUI, CI.  
-6. **Próximo passo (20s):** “Empacotar executável e health-check de feeds.”
-
----
+1. Problema de dispersão de feeds (30s)  
+2. Demo Offline → mostrar Markdown (60s)  
+3. Mostrar `collector` / `filters` / testes (60s)  
+4. Trade-off desktop vs NewsWeave web (30s)  
 
 ## Docs
 
-- [Audit Report](./docs/AUDIT_REPORT.md)
-- [Architecture](./docs/ARCHITECTURE.md)
-- [Technical Decisions](./docs/TECHNICAL_DECISIONS.md)
-- [Testing](./docs/TESTING.md)
-- [Deployment](./docs/DEPLOYMENT.md)
-- [Handoff](./docs/HANDOFF.md)
+- [PORTFOLIO_HANDOFF](./docs/PORTFOLIO_HANDOFF.md) · [AUDIT](./docs/AUDIT_REPORT.md) · [HANDOFF](./docs/HANDOFF.md)
+- [ARCHITECTURE](./docs/ARCHITECTURE.md) · [TESTING](./docs/TESTING.md) · [DEPLOYMENT](./docs/DEPLOYMENT.md)
+- [CHANGELOG](./CHANGELOG.md)
 
 ## Autor
 
-**Felipe Alirio Baruja (BarujaFe1)**  
+**Felipe Alírio Baruja** — desenvolvedor de software; estudante de Estatística/Ciência de Dados (USP).  
 [Portfólio](https://barujafe.vercel.app/) · [GitHub](https://github.com/BarujaFe1) · [LinkedIn](https://www.linkedin.com/in/barujafe/)
 
 ## License
 
-MIT — ver [LICENSE](./LICENSE).
+MIT — [LICENSE](./LICENSE).

@@ -15,7 +15,8 @@ Esta passagem elevou o repositório de “script pessoal polido” para **produt
 | Momento | Nota (0–10) | Comentário |
 |---|---:|---|
 | Antes desta revisão | **5.5** | Funciona como protótipo; frágil para recrutador técnico |
-| Depois desta revisão | **8.0** | Arquitetura clara, testável, documentada; ainda desktop-only |
+| Depois desta revisão | **8.0** | Arquitetura clara, testável, documentada; lab desktop (não web) |
+| Evidence pass (screenshots + positioning) | **8.0** | Evidências visuais e papel vs NewsWeave fechados; score mantido com honestidade |
 
 ## Principais riscos (antes)
 

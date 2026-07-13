@@ -1,9 +1,17 @@
-# Screenshots
+# Coletor — empty / onboarding
+![Collector empty state](./01-collector-empty.png)
 
-Add real captures here and reference them from the README:
+# Coletor — DEMO OFFLINE (fixtures, sem PII)
+![Collector demo digest](./02-collector-demo.png)
 
-- `collector.png` — main digest view after DEMO OFFLINE or live scrape
-- `settings.png` — feeds + keyword filters
-- `export.png` — optional Markdown export dialog
+# Configurações — feeds + filtros
+![Settings feeds and filters](./03-settings.png)
 
-Until then, the README uses `icon.png` as a visual placeholder.
+# Manifest
+
+See [MANIFEST.md](./MANIFEST.md). Regenerate with:
+
+```bash
+pip install pillow
+python scripts/capture_screenshots.py
+```
